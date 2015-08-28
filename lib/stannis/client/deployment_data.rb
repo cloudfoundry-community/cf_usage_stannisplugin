@@ -5,10 +5,12 @@ class Stannis::Client::DeploymentData
     @value = value
     @indicator = indicator
   end
+
   def validation_errors
     errors = []
     errors << "missing label" unless label && label.size > 0
     errors << "missing value" unless value && value.size > 0
+    errors << "missing indicator" unless indicator && indicator.size > 0
     errors
   end
 end
