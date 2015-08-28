@@ -6,9 +6,14 @@ describe Stannis::Plugin::AwsRdsSnapshot::Config do
     Stannis::Plugin::AwsRdsSnapshot::Config.load_file(example_config)
   }
 
-  it 'has fog Fog::Compute::AWS' do
-    expect(subject.fog).not_to be nil
-    expect(subject.fog).to be_instance_of(Fog::Compute::AWS::Real)
+  it 'has fog_compute Fog::Compute::AWS' do
+    expect(subject.fog_compute).not_to be nil
+    expect(subject.fog_compute).to be_instance_of(Fog::Compute::AWS::Real)
+  end
+
+  it 'has fog_rds Fog::AWS::RDS' do
+    expect(subject.fog_rds).not_to be nil
+    expect(subject.fog_rds).to be_instance_of(Fog::AWS::RDS::Real)
   end
 
   it 'has stannis client' do

@@ -16,9 +16,17 @@ class Stannis::Plugin::AwsRdsSnapshot::Config
     @stannis = Stannis::Client.new(config["stannis"])
   end
 
-  def fog
-    @fog ||= Fog::Compute.new({
+  def fog_compute
+    @fog_compute ||= Fog::Compute.new({
       provider: 'AWS',
+      aws_access_key_id: @aws_credentials["aws_access_key_id"],
+      aws_secret_access_key: @aws_credentials["aws_secret_access_key"]
+    })
+    # TODO: need region
+  end
+
+  def fog_rds
+    @fog_rds ||= Fog::AWS::RDS.new({
       aws_access_key_id: @aws_credentials["aws_access_key_id"],
       aws_secret_access_key: @aws_credentials["aws_secret_access_key"]
     })
