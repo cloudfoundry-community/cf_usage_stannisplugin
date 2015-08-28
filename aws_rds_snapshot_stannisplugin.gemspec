@@ -5,7 +5,7 @@ require 'aws_rds_snapshot_stannisplugin/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "aws_rds_snapshot_stannisplugin"
-  spec.version       = AwsRdsSnapshotStannisplugin::VERSION
+  spec.version       = Stannis::Plugin::AwsRdsSnapshot::VERSION
   spec.authors       = ["Dr Nic Williams"]
   spec.email         = ["drnicwilliams@gmail.com"]
 

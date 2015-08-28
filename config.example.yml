@@ -1,0 +1,9 @@
+---
+aws:
+  aws_access_key_id: XXXX
+  aws_secret_access_key: XXXX
+deployments:
+- bosh_really_uuid: 10.10.10.10-internal-uuid
+  deployment_name: cf
+  rds:
+    instance_id: cf-db
