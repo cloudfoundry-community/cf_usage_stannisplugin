@@ -29,5 +29,20 @@ unless options[:config]
   exit 1
 end
 
+def err(msg)
+  $stderr.puts msg
+  exit 1
+end
+
 config = Stannis::Plugin::AwsRdsSnapshot::Config.load_file(options[:config])
-p config.fog_rds
+config.deployments.each do |deployment|
+  unless deployment["rds"] && deployment["rds"].is_a?(Array)
+    err "Missing config: deployments[].rds[] - #{deployment.inspect}"
+  end
+  deployment["rds"].each do |rds_snapshots|
+    instance_id = rds_snapshots["instance_id"]
+    status = Stannis::Plugin::AwsRdsSnapshot::Status.new(config.fog_rds, instance_id)
+    snapshot = status.latest_snapshot
+    p status.stannis_data(snapshot)
+  end
+end
