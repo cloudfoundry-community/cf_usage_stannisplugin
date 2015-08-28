@@ -2,6 +2,7 @@
 
 require "aws_rds_snapshot_stannisplugin"
 require "optparse"
+require "net/http"
 
 options = {}
 opts = OptionParser.new do |opts|
@@ -39,10 +40,22 @@ config.deployments.each do |deployment|
   unless deployment["rds"] && deployment["rds"].is_a?(Array)
     err "Missing config: deployments[].rds[] - #{deployment.inspect}"
   end
-  deployment["rds"].each do |rds_snapshots|
+  unless deployment["bosh_really_uuid"] &&
+    deployment["deployment_name"] &&
+    deployment["label"]
+    err "Required deployment config: bosh_really_uuid, deployment_name, label"
+  end
+
+  data = deployment["rds"].map do |rds_snapshots|
     instance_id = rds_snapshots["instance_id"]
     status = Stannis::Plugin::AwsRdsSnapshot::Status.new(config.fog_rds, instance_id)
     snapshot = status.latest_snapshot
-    p status.stannis_data(snapshot)
+    status.stannis_data(snapshot)
   end
+  puts({
+    "reallyuuid" => deployment["bosh_really_uuid"],
+    "deploymentname" => deployment["deployment_name"],
+    "label" => deployment["label"],
+    "data" => data
+  }.to_json)
 end

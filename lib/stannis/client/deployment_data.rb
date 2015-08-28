@@ -1,3 +1,5 @@
+require "json"
+
 class Stannis::Client::DeploymentData
   attr_reader :label, :value, :indicator
   def initialize(label, value, indicator="ok")
@@ -12,5 +14,13 @@ class Stannis::Client::DeploymentData
     errors << "missing value" unless value && value.size > 0
     errors << "missing indicator" unless indicator && indicator.size > 0
     errors
+  end
+
+  def to_json(options = {})
+    {
+      "indicator" => indicator,
+      "value" => value,
+      "label" => label
+    }.to_json
   end
 end
