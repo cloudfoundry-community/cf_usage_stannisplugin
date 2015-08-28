@@ -1,3 +1,5 @@
+require "restclient"
+
 module Stannis
   class Client
     class MissingConfigError; end
@@ -13,8 +15,10 @@ module Stannis
       end
     end
 
-    def upload_deployment_data()
-
+    def upload_deployment_data(bosh_really_uuid, deployment_name, label, upload_data)
+      url = "#{@uri}/upload/#{bosh_really_uuid}/deployments/#{deployment_name}/data/#{label}"
+      collector = ::RestClient::Resource.new(url, @username, @password)
+      collector.post(upload_data)
     end
   end
 end

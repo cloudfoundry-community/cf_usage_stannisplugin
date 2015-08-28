@@ -2,7 +2,6 @@
 
 require "aws_rds_snapshot_stannisplugin"
 require "optparse"
-require "net/http"
 
 options = {}
 opts = OptionParser.new do |opts|
@@ -36,13 +35,14 @@ def err(msg)
 end
 
 config = Stannis::Plugin::AwsRdsSnapshot::Config.load_file(options[:config])
+
 config.deployments.each do |deployment|
   unless deployment["rds"] && deployment["rds"].is_a?(Array)
     err "Missing config: deployments[].rds[] - #{deployment.inspect}"
   end
-  unless deployment["bosh_really_uuid"] &&
-    deployment["deployment_name"] &&
-    deployment["label"]
+  unless (bosh_really_uuid = deployment["bosh_really_uuid"]) &&
+    (deployment_name = deployment["deployment_name"]) &&
+    (label = deployment["label"])
     err "Required deployment config: bosh_really_uuid, deployment_name, label"
   end
 
@@ -52,10 +52,12 @@ config.deployments.each do |deployment|
     snapshot = status.latest_snapshot
     status.stannis_data(snapshot)
   end
-  puts({
-    "reallyuuid" => deployment["bosh_really_uuid"],
-    "deploymentname" => deployment["deployment_name"],
-    "label" => deployment["label"],
+  upload_data = {
+    "reallyuuid" => bosh_really_uuid,
+    "deploymentname" => deployment_name,
+    "label" => label,
     "data" => data
-  }.to_json)
+  }.to_json
+
+  config.stannis.upload_deployment_data(bosh_really_uuid, deployment_name, label, upload_data)
 end
