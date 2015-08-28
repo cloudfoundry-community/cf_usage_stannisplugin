@@ -6,7 +6,8 @@ describe Stannis::Plugin::AwsRdsSnapshot::Config do
     Stannis::Plugin::AwsRdsSnapshot::Config.load_file(example_config)
   }
 
-  it 'loads example config' do
+  it 'has fog object' do
     expect(subject.fog).not_to be nil
+    expect(subject.fog).to be_instance_of(Fog::Compute::AWS::Real)
   end
 end

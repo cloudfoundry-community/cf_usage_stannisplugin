@@ -17,5 +17,6 @@ class Stannis::Plugin::AwsRdsSnapshot::Config
       aws_access_key_id: @aws_credentials["aws_access_key_id"],
       aws_secret_access_key: @aws_credentials["aws_secret_access_key"]
     })
+    # TODO: need region
   end
 end
