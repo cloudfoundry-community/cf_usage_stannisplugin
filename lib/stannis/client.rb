@@ -18,3 +18,5 @@ module Stannis
     end
   end
 end
+
+require "stannis/client/deployment_data"
