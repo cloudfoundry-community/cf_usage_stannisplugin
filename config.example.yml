@@ -2,8 +2,12 @@
 aws:
   aws_access_key_id: XXXX
   aws_secret_access_key: XXXX
+stannis:
+  uri: http://localhost:3000
+  username: admin
+  password: admin
 deployments:
-- bosh_really_uuid: 10.10.10.10-internal-uuid
-  deployment_name: cf
+- bosh_really_uuid: 10.10.10.11-uuid-aws-bosh-production
+  deployment_name: cf-aws-prod
   rds:
     instance_id: cf-db

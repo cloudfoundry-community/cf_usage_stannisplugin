@@ -1,7 +1,6 @@
-module Stannis
-  module Plugin
-    module AwsRdsSnapshot
-    end
+require "stannis/client"
+module Stannis::Plugin
+  module AwsRdsSnapshot
   end
 end
 

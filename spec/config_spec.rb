@@ -11,6 +11,11 @@ describe Stannis::Plugin::AwsRdsSnapshot::Config do
     expect(subject.fog).to be_instance_of(Fog::Compute::AWS::Real)
   end
 
+  it 'has stannis client' do
+    expect(subject.stannis).not_to be nil
+    expect(subject.stannis).to be_instance_of(Stannis::Client)
+  end
+
   it 'maps deployments to RDS usage' do
     expect(subject.deployments).not_to be nil
     expect(subject.deployments.size).to eq(1)

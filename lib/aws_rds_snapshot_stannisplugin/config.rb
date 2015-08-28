@@ -2,6 +2,7 @@ require "yaml"
 require "fog"
 
 class Stannis::Plugin::AwsRdsSnapshot::Config
+  attr_reader :stannis
   attr_reader :deployments
 
   def self.load_file(path)
@@ -12,6 +13,7 @@ class Stannis::Plugin::AwsRdsSnapshot::Config
   def initialize(config)
     @aws_credentials = config["aws"]
     @deployments = config["deployments"]
+    @stannis = Stannis::Client.new(config["stannis"])
   end
 
   def fog
