@@ -1,4 +1,12 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in aws_rds_snapshot_stannisplugin.gemspec
-gemspec
+gem "fog"
+gem "activesupport"
+gem "actionview"
+gem "json_pure"
+gem "rest-client"
+group :test do
+  gem "bundler", "~> 1.10"
+  gem "rake", "~> 10.0"
+  gem "rspec"
+end
