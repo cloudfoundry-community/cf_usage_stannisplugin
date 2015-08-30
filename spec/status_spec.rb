@@ -23,13 +23,23 @@ describe Stannis::Plugin::AwsRdsSnapshot::Status do
   end
 
   describe 'packaging for Stannis::Client' do
-    let(:snapshot) { double(Fog::AWS::RDS::Snapshot, instance_id: "cf-db", created_at: yesterday) }
-    before { @data = subject.stannis_data(snapshot) }
-    it('for found snapshot') { expect(@data).to_not be_nil }
-    it('no validation errors') { expect(@data.validation_errors).to eq([]) }
-    it('has label') { expect(@data.label).to eq("RDS snapshot cf-db") }
-    it('has value') { expect(@data.value).to eq("1 day ago") }
-    it('has indicator') { expect(@data.indicator).to eq("ok") }
-  end
+    describe 'existing snapshots' do
+      let(:snapshot) { double(Fog::AWS::RDS::Snapshot, instance_id: "cf-db", created_at: yesterday) }
+      before { @data = subject.stannis_data(snapshot) }
+      it('for found snapshot') { expect(@data).to_not be_nil }
+      it('no validation errors') { expect(@data.validation_errors).to eq([]) }
+      it('has label') { expect(@data.label).to eq("RDS snapshot cf-db") }
+      it('has value') { expect(@data.value).to eq("1 day ago") }
+      it('has indicator') { expect(@data.indicator).to eq("ok") }
+    end
 
+    describe 'no snapshots' do
+      before { @data = subject.stannis_data(nil) }
+      it('for missing snapshot') { expect(@data).to_not be_nil }
+      it('no validation errors') { expect(@data.validation_errors).to eq([]) }
+      it('has label') { expect(@data.label).to eq("RDS snapshot cf-db") }
+      it('has "missing" value') { expect(@data.value).to eq("missing") }
+      it('has indicator') { expect(@data.indicator).to eq("down") }
+    end
+  end
 end

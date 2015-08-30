@@ -14,9 +14,14 @@ class Stannis::Plugin::AwsRdsSnapshot::Status
   end
 
   def stannis_data(snapshot)
-    Stannis::Client::DeploymentData.new(
-      "RDS snapshot #{snapshot.instance_id}",
-      "#{time_ago_in_words(snapshot.created_at)} ago"
-    )
+    if snapshot
+      Stannis::Client::DeploymentData.new(
+        "RDS snapshot #{@instance_id}",
+        "#{time_ago_in_words(snapshot.created_at)} ago"
+      )
+    else
+      Stannis::Client::DeploymentData.new(
+      "RDS snapshot #{@instance_id}", "missing", "down")
+    end
   end
 end
