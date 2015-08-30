@@ -23,4 +23,8 @@ class Stannis::Client::DeploymentData
       "label" => label
     }.to_json
   end
+
+  def to_s
+    "#{indicator} - #{value} #{label}"
+  end
 end

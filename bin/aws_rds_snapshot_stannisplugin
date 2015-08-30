@@ -60,5 +60,6 @@ config.deployments.each do |deployment|
     "data" => data
   }.to_json
 
+  puts upload_data
   config.stannis.upload_deployment_data(bosh_really_uuid, deployment_name, label, upload_data)
 end
