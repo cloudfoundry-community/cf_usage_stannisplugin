@@ -10,11 +10,13 @@ describe Stannis::Plugin::AwsRdsSnapshot::Status do
 
   describe 'latest snapshot' do
     it 'fetches' do
-      expect(fog_rds).to receive(:snapshots).and_return([
-        double(Fog::AWS::RDS::Snapshot, instance_id: "random-thing"),
-        double(Fog::AWS::RDS::Snapshot, instance_id: "cf-db", created_at: 2.days.ago),
-        double(Fog::AWS::RDS::Snapshot, instance_id: "cf-db", created_at: yesterday),
-      ])
+      snapshots = double(Fog::AWS::RDS::Snapshots)
+      expect(fog_rds).to receive(:snapshots).and_return(snapshots)
+      expect(snapshots).to receive(:all).with(identifier: instance_id).
+        and_return([
+          double(Fog::AWS::RDS::Snapshot, instance_id: "cf-db", created_at: 2.days.ago),
+          double(Fog::AWS::RDS::Snapshot, instance_id: "cf-db", created_at: yesterday),
+        ])
       latest = subject.latest_snapshot
       expect(latest).to_not be_nil
       expect(latest.instance_id).to eq("cf-db")

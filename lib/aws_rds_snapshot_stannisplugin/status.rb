@@ -8,8 +8,7 @@ class Stannis::Plugin::AwsRdsSnapshot::Status
   end
 
   def latest_snapshot
-    @fog_rds.snapshots.
-      select {|s| s.instance_id == @instance_id}.
+    @fog_rds.snapshots.all(identifier: @instance_id).
       sort {|s1, s2| s1.created_at <=> s2.created_at}.last
   end
 
