@@ -2,6 +2,7 @@
 aws:
   aws_access_key_id: XXXX
   aws_secret_access_key: XXXX
+  region: us-west-2
 stannis:
   uri: http://localhost:3000
   username: admin
