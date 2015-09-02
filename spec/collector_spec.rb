@@ -25,17 +25,6 @@ describe Stannis::Plugin::AwsSnapshots::Collector do
 
   subject { Stannis::Plugin::AwsSnapshots::Collector.new(config) }
 
-  describe "fetches statuses" do
-    let(:cf_rds_data) { double(Stannis::Client::DeploymentData) }
-    let(:redis_volume_data) { double(Stannis::Client::DeploymentData) }
-
-    it 'for each deployment' do
-      expect(subject).to receive(:fetch_deployment_statuses).with(cf_deployment_config).and_return([cf_rds_data])
-      expect(subject).to receive(:fetch_deployment_statuses).with(redis_deployment_config).and_return([redis_volume_data])
-      expect(subject.fetch_statuses).to eq([cf_rds_data, redis_volume_data])
-    end
-  end
-
   describe "fetches status for a deployment" do
     let(:rds_ccdb_data) { double(Stannis::Client::DeploymentData) }
     let(:rds_uaadb_data) { double(Stannis::Client::DeploymentData) }

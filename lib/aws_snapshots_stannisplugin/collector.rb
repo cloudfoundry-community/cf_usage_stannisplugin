@@ -5,15 +5,6 @@ class Stannis::Plugin::AwsSnapshots::Collector
     @config = config
   end
 
-  def fetch_statuses
-    status_data = []
-    config.deployments.each do |deployment_config|
-      statuses = fetch_deployment_statuses(deployment_config)
-      status_data.push(*statuses)
-    end
-    status_data
-  end
-
   def fetch_deployment_statuses(deployment_config)
     unless deployment_config["rds"] || deployment_config["volumes"]
       err "deployments[] requires either rds[] and/or volumes[]"
