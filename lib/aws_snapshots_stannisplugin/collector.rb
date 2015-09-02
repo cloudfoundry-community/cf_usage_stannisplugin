@@ -6,29 +6,48 @@ class Stannis::Plugin::AwsSnapshots::Collector
   end
 
   def fetch_statuses
-    config.deployments.map do |deployment_config|
-      fetch_statuses_for_deployment(deployment_config)
+    status_data = []
+    config.deployments.each do |deployment_config|
+      statuses = fetch_deployment_statuses(deployment_config)
+      status_data.push(*statuses)
     end
+    status_data
   end
 
-  def fetch_statuses_for_deployment(deployment_config)
+  def fetch_deployment_statuses(deployment_config)
+    unless deployment_config["rds"] || deployment_config["volumes"]
+      err "deployments[] requires either rds[] and/or volumes[]"
+    end
+    # unless (bosh_really_uuid = deployment_config["bosh_really_uuid"]) &&
+    #   (deployment_name = deployment_config["deployment_name"]) &&
+    #   (label = deployment_config["label"])
+    #   err "Required deployment config: bosh_really_uuid, deployment_name, label"
+    # end
 
+    extra_data = []
+    if deployment_config["rds"]
+      if !deployment_config["rds"].is_a?(Array)
+        err 'deployments[].rds must be an array of {instance_id: "name"}'
+      end
+      deployment_config["rds"].each do |rds_config|
+        extra_data << fetch_status_rds(rds_config)
+      end
+    end
+
+    if deployment_config["volumes"]
+      if !deployment_config["volumes"].is_a?(Array)
+        err 'deployments[].volumes must be an array of {description_regexp: "regexp"}'
+      end
+      deployment_config["volumes"].each do |volume_config|
+        extra_data << fetch_status_volume(volume_config)
+      end
+    end
+    extra_data
   end
 
   def old_code
     config.deployments.each do |deployment|
-      unless deployment["rds"] || deployment["volumes"]
-        err "deployments[] requires either rds[] and/or volumes[]"
-      end
       if deployment["rds"]
-        unless deployment["rds"].is_a?(Array)
-          err "Missing config: deployments[].rds[] - #{deployment.inspect}"
-        end
-        unless (bosh_really_uuid = deployment["bosh_really_uuid"]) &&
-          (deployment_name = deployment["deployment_name"]) &&
-          (label = deployment["label"])
-          err "Required deployment config: bosh_really_uuid, deployment_name, label"
-        end
 
         data = deployment["rds"].map do |rds_snapshots|
           instance_id = rds_snapshots["instance_id"]
