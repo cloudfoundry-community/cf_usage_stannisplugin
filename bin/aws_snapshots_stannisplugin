@@ -1,12 +1,12 @@
 #!/usr/bin/env ruby
 
 $:.unshift(File.expand_path("../../lib", __FILE__))
-require "aws_rds_snapshot_stannisplugin"
+require "aws_snapshots_stannisplugin"
 require "optparse"
 
 options = {}
 opts = OptionParser.new do |opts|
-  opts.banner = "Usage: aws_rds_snapshot_stannisplugin [options]"
+  opts.banner = "Usage: aws_snapshots_stannisplugin [options]"
 
   opts.on("-c", "--config CONFIG", "Path to configuration file") do |c|
     options[:config] = c
@@ -19,7 +19,7 @@ opts = OptionParser.new do |opts|
     exit
   end
   opts.on("--version", "Show version") do |v|
-    puts "aws_rds_snapshot_stannisplugin #{Stannis::Plugin::AwsRdsSnapshot::VERSION}"
+    puts "aws_snapshots_stannisplugin #{Stannis::Plugin::AwsSnapshots::VERSION}"
     exit 0
   end
 end
@@ -35,7 +35,7 @@ def err(msg)
   exit 1
 end
 
-config = Stannis::Plugin::AwsRdsSnapshot::Config.load_file(options[:config])
+config = Stannis::Plugin::AwsSnapshots::Config.load_file(options[:config])
 
 config.deployments.each do |deployment|
   unless deployment["rds"] && deployment["rds"].is_a?(Array)
@@ -49,7 +49,7 @@ config.deployments.each do |deployment|
 
   data = deployment["rds"].map do |rds_snapshots|
     instance_id = rds_snapshots["instance_id"]
-    status = Stannis::Plugin::AwsRdsSnapshot::Status.new(config.fog_rds, instance_id)
+    status = Stannis::Plugin::AwsSnapshots::Status.new(config.fog_rds, instance_id)
     snapshot = status.latest_snapshot
     status.stannis_data(snapshot)
   end

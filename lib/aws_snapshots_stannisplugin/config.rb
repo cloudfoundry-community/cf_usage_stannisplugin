@@ -1,7 +1,7 @@
 require "yaml"
 require "fog"
 
-class Stannis::Plugin::AwsRdsSnapshot::Config
+class Stannis::Plugin::AwsSnapshots::Config
   attr_reader :stannis
   attr_reader :deployments
 
