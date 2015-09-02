@@ -2,11 +2,11 @@ require "spec_helper"
 require "active_support/core_ext/numeric/time"
 require "active_support/core_ext/date/calculations"
 
-describe Stannis::Plugin::AwsSnapshots::RDS::Status do
+describe Stannis::Plugin::AwsSnapshots::RDS::SnapshotStatus do
   let(:fog_rds) { double(Fog::AWS::RDS::Real) }
   let(:instance_id) { "cf-db" }
   let(:yesterday) { 1.day.ago }
-  subject { Stannis::Plugin::AwsSnapshots::RDS::Status.new(fog_rds, instance_id) }
+  subject { Stannis::Plugin::AwsSnapshots::RDS::SnapshotStatus.new(fog_rds, instance_id) }
 
   describe 'latest snapshot' do
     it 'fetches' do

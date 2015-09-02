@@ -1,6 +1,6 @@
 require 'action_view'
 
-class Stannis::Plugin::AwsSnapshots::RDS::Status
+class Stannis::Plugin::AwsSnapshots::RDS::SnapshotStatus
   include ActionView::Helpers::DateHelper
   def initialize(fog_rds, instance_id)
     @fog_rds = fog_rds
