@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+
+$:.unshift(File.expand_path("../../lib", __FILE__))
+require "aws_snapshots_stannisplugin"
+require "optparse"
+
+options = {}
+opts = OptionParser.new do |opts|
+  opts.banner = "Usage: aws_snapshots_stannisplugin [options]"
+
+  opts.on("-c", "--config CONFIG", "Path to configuration file") do |c|
+    options[:config] = c
+  end
+
+  opts.separator ""
+  opts.separator "Common options:"
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+  opts.on("--version", "Show version") do |v|
+    puts "aws_snapshots_stannisplugin #{Stannis::Plugin::AwsSnapshots::VERSION}"
+    exit 0
+  end
+end
+
+opts.parse!(ARGV)
+unless options[:config]
+  puts opts
+  exit 1
+end
+
+config = Stannis::Plugin::AwsSnapshots::Config.load_file(options[:config])
+collector = Stannis::Plugin::AwsSnapshots::Collector.new(config)
+
+config.deployments.each do |deployment_config|
+  unless (bosh_really_uuid = deployment_config["bosh_really_uuid"]) &&
+    (deployment_name = deployment_config["deployment_name"]) &&
+    (label = deployment_config["label"])
+    err "Required deployment config: bosh_really_uuid, deployment_name, label"
+  end
+
+  deployment_statuses = collector.fetch_deployment_statuses(deployment_config)
+  upload_data = {
+    "reallyuuid" => bosh_really_uuid,
+    "deploymentname" => deployment_name,
+    "label" => label,
+    "data" => deployment_statuses
+  }.to_json
+
+  puts upload_data
+  config.stannis.upload_deployment_data(bosh_really_uuid, deployment_name, label, upload_data)
+  $stdout.flush
+end
