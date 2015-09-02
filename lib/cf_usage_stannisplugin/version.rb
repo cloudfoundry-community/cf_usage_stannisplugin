@@ -1,6 +1,6 @@
 module Stannis
   module Plugin
-    module AwsSnapshots
+    module CfUsage
       VERSION = "0.1.0"
     end
   end

@@ -1,8 +1,4 @@
 ---
-aws:
-  aws_access_key_id: XXXX
-  aws_secret_access_key: XXXX
-  region: us-west-2
 stannis:
   uri: http://localhost:3000
   username: admin
@@ -10,8 +6,8 @@ stannis:
 deployments:
 - bosh_really_uuid: 10.10.10.11-uuid-aws-bosh-production
   deployment_name: cf-aws-prod
-  rds:
-  - instance_id: cf-ccdb
-  - instance_id: cf-uaadb
-  volumes:
-  - description_regexp: "cf-nfs"
+  cf:
+    api: https://api.run.pivotal.io
+    skip_ssl_validation: false
+    username: admin
+    password: admin

@@ -1,2 +1,2 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'aws_snapshots_stannisplugin'
+require 'cf_usage_stannisplugin'

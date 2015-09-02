@@ -1,12 +1,12 @@
 #!/usr/bin/env ruby
 
 $:.unshift(File.expand_path("../../lib", __FILE__))
-require "aws_snapshots_stannisplugin"
+require "cf_usage_stannisplugin"
 require "optparse"
 
 options = {}
 opts = OptionParser.new do |opts|
-  opts.banner = "Usage: aws_snapshots_stannisplugin [options]"
+  opts.banner = "Usage: cf_usage_stannisplugin [options]"
 
   opts.on("-c", "--config CONFIG", "Path to configuration file") do |c|
     options[:config] = c
@@ -19,7 +19,7 @@ opts = OptionParser.new do |opts|
     exit
   end
   opts.on("--version", "Show version") do |v|
-    puts "aws_snapshots_stannisplugin #{Stannis::Plugin::AwsSnapshots::VERSION}"
+    puts "cf_usage_stannisplugin #{Stannis::Plugin::CfUsage::VERSION}"
     exit 0
   end
 end
@@ -30,8 +30,8 @@ unless options[:config]
   exit 1
 end
 
-config = Stannis::Plugin::AwsSnapshots::Config.load_file(options[:config])
-collector = Stannis::Plugin::AwsSnapshots::Collector.new(config)
+config = Stannis::Plugin::CfUsage::Config.load_file(options[:config])
+collector = Stannis::Plugin::CfUsage::Collector.new(config)
 
 config.deployments.each do |deployment_config|
   unless (bosh_really_uuid = deployment_config["bosh_really_uuid"]) &&
