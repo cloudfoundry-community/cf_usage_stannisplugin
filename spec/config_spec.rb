@@ -12,7 +12,6 @@ describe Stannis::Plugin::CfUsage::Config do
   end
 
   it 'has cf client' do
-    expect(subject.cf).not_to be nil
-    expect(subject.cf).to be_instance_of(Stannis::Plugin::CloudFoundryClient)
+    expect(subject.cf).to be_instance_of(Stannis::Plugin::CfUsage::CfClient)
   end
 end
