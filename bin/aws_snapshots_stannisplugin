@@ -31,4 +31,6 @@ unless options[:config]
 end
 
 config = Stannis::Plugin::AwsSnapshots::Config.load_file(options[:config])
-collector = Stannis::Plugin::AwsSnapshots::Collector.new(collector)
+collector = Stannis::Plugin::AwsSnapshots::Collector.new(config)
+
+puts collector.fetch_statuses.to_json
