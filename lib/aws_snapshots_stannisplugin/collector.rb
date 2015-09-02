@@ -45,6 +45,21 @@ class Stannis::Plugin::AwsSnapshots::Collector
     extra_data
   end
 
+  def fetch_status_rds(rds_config)
+    unless instance_id = rds_config["instance_id"]
+      err "RDS config requires instance_id"
+    end
+    rds_snapshot_status.stannis_snapshot_data(instance_id)
+  end
+
+  def rds_snapshot_status
+    @rds_snapshot_status ||= Stannis::Plugin::AwsSnapshots::RDS::SnapshotStatus.new(config.fog_rds)
+  end
+
+  def fetch_status_volume(volume_config)
+
+  end
+
   def old_code
     config.deployments.each do |deployment|
       if deployment["rds"]

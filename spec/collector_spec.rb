@@ -46,6 +46,13 @@ describe Stannis::Plugin::AwsSnapshots::Collector do
       expect(subject.fetch_deployment_statuses(cf_deployment_config)).to eq([rds_ccdb_data, rds_uaadb_data])
     end
 
+    it 'fetches an RDS snapshot' do
+      snapshot_status_cmd = double(Stannis::Plugin::AwsSnapshots::RDS::SnapshotStatus)
+      expect(subject).to receive(:rds_snapshot_status).and_return(snapshot_status_cmd)
+      expect(snapshot_status_cmd).to receive(:stannis_snapshot_data).with("rds-cf-ccdb").and_return(rds_ccdb_data)
+      expect(subject.fetch_status_rds({"instance_id" => "rds-cf-ccdb"})).to eq(rds_ccdb_data)
+    end
+
     # it 'with volume snapshots' do
     #   expect(subject.fetch_deployment_statuses(cf_deployment_config)).to eq(volumes_status)
     # end
