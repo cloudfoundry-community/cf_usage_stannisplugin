@@ -9,11 +9,6 @@ class Stannis::Plugin::AwsSnapshots::Collector
     unless deployment_config["rds"] || deployment_config["volumes"]
       err "deployments[] requires either rds[] and/or volumes[]"
     end
-    # unless (bosh_really_uuid = deployment_config["bosh_really_uuid"]) &&
-    #   (deployment_name = deployment_config["deployment_name"]) &&
-    #   (label = deployment_config["label"])
-    #   err "Required deployment config: bosh_really_uuid, deployment_name, label"
-    # end
 
     extra_data = []
     if deployment_config["rds"]
