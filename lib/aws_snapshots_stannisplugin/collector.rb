@@ -39,7 +39,7 @@ class Stannis::Plugin::AwsSnapshots::Collector
         err 'deployments[].volumes must be an array of {description_regexp: "regexp"}'
       end
       deployment_config["volumes"].each do |volume_config|
-        extra_data << fetch_status_volume(volume_config)
+        extra_data << fetch_volume_snapshot_status(volume_config)
       end
     end
     extra_data
@@ -56,8 +56,16 @@ class Stannis::Plugin::AwsSnapshots::Collector
     @rds_snapshot_status ||= Stannis::Plugin::AwsSnapshots::RDS::SnapshotStatus.new(config.fog_rds)
   end
 
-  def fetch_status_volume(volume_config)
+  def fetch_volume_snapshot_status(volume_config)
+    unless regexp_str = volume_config["description_regexp"]
+      err "Volume config requires description_regexp"
+    end
+    regexp = Regexp.new(regexp_str)
+    volume_snapshot_status.stannis_snapshot_data(regexp)
+  end
 
+  def volume_snapshot_status
+    @volume_snapshot_status ||= Stannis::Plugin::AwsSnapshots::Volumes::SnapshotStatus.new(config.fog_compute)
   end
 
   def old_code
