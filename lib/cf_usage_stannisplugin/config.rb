@@ -1,5 +1,4 @@
 require "yaml"
-require "fog"
 
 class Stannis::Plugin::CfUsage::Config
   attr_reader :stannis

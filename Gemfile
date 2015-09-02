@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem "fog"
+gem "cfoundry"
 gem "activesupport"
 gem "actionview"
 gem "json_pure"
