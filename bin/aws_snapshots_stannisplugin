@@ -30,36 +30,5 @@ unless options[:config]
   exit 1
 end
 
-def err(msg)
-  $stderr.puts msg
-  exit 1
-end
-
 config = Stannis::Plugin::AwsSnapshots::Config.load_file(options[:config])
-
-config.deployments.each do |deployment|
-  unless deployment["rds"] && deployment["rds"].is_a?(Array)
-    err "Missing config: deployments[].rds[] - #{deployment.inspect}"
-  end
-  unless (bosh_really_uuid = deployment["bosh_really_uuid"]) &&
-    (deployment_name = deployment["deployment_name"]) &&
-    (label = deployment["label"])
-    err "Required deployment config: bosh_really_uuid, deployment_name, label"
-  end
-
-  data = deployment["rds"].map do |rds_snapshots|
-    instance_id = rds_snapshots["instance_id"]
-    status = Stannis::Plugin::AwsSnapshots::Status.new(config.fog_rds, instance_id)
-    snapshot = status.latest_snapshot
-    status.stannis_data(snapshot)
-  end
-  upload_data = {
-    "reallyuuid" => bosh_really_uuid,
-    "deploymentname" => deployment_name,
-    "label" => label,
-    "data" => data
-  }.to_json
-
-  puts upload_data
-  config.stannis.upload_deployment_data(bosh_really_uuid, deployment_name, label, upload_data)
-end
+collector = Stannis::Plugin::AwsSnapshots::Collector.new(collector)
