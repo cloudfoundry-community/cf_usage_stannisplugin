@@ -11,7 +11,4 @@ describe Stannis::Plugin::CfUsage::Config do
     expect(subject.stannis).to be_instance_of(Stannis::Client)
   end
 
-  it 'has cf client' do
-    expect(subject.cf).to be_instance_of(Stannis::Plugin::CfUsage::CfClient)
-  end
 end

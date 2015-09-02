@@ -40,15 +40,18 @@ config.deployments.each do |deployment_config|
     err "Required deployment config: bosh_really_uuid, deployment_name, label"
   end
 
-  deployment_statuses = collector.fetch_deployment_statuses(deployment_config)
-  upload_data = {
-    "reallyuuid" => bosh_really_uuid,
-    "deploymentname" => deployment_name,
-    "label" => label,
-    "data" => deployment_statuses
-  }.to_json
+  if deployment_statuses = collector.fetch_deployment_statuses(deployment_config)
+    upload_data = {
+      "reallyuuid" => bosh_really_uuid,
+      "deploymentname" => deployment_name,
+      "label" => label,
+      "data" => deployment_statuses
+    }.to_json
 
-  puts upload_data
-  config.stannis.upload_deployment_data(bosh_really_uuid, deployment_name, label, upload_data)
+    puts upload_data
+    config.stannis.upload_deployment_data(bosh_really_uuid, deployment_name, label, upload_data)
+  else
+    puts "No statuses for #{deployment_name}"
+  end
   $stdout.flush
 end
