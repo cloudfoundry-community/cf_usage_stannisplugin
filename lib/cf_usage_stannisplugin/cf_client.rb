@@ -7,7 +7,7 @@ class Stannis::Plugin::CfUsage::CfClient
   end
 
   def login
-    @cf.login({username: config["username"], password: config["password"]})
+    @cf.login({username: @config["username"], password: @config["password"]})
   end
 
   def get(*args)
