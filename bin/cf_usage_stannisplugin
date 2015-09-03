@@ -35,23 +35,22 @@ collector = Stannis::Plugin::CfUsage::Collector.new(config)
 
 config.deployments.each do |deployment_config|
   unless (bosh_really_uuid = deployment_config["bosh_really_uuid"]) &&
-    (deployment_name = deployment_config["deployment_name"]) &&
-    (label = deployment_config["label"])
-    err "Required deployment config: bosh_really_uuid, deployment_name, label"
+    (deployment_name = deployment_config["deployment_name"])
+    err "Required deployment config: bosh_really_uuid, deployment_name"
   end
+  label = "cf-usage"
 
-  if deployment_statuses = collector.fetch_deployment_statuses(deployment_config)
-    upload_data = {
-      "reallyuuid" => bosh_really_uuid,
-      "deploymentname" => deployment_name,
-      "label" => label,
-      "data" => deployment_statuses
-    }.to_json
+  puts "Fetching general status for deployment '#{deployment_name}'"
+  $stdout.flush
+  deployment_statuses = collector.fetch_deployment_statuses(deployment_config)
+  upload_data = {
+    "reallyuuid" => bosh_really_uuid,
+    "deploymentname" => deployment_name,
+    "label" => label,
+    "data" => deployment_statuses
+  }.to_json
 
-    puts upload_data
-    config.stannis.upload_deployment_data(bosh_really_uuid, deployment_name, label, upload_data)
-  else
-    puts "No statuses for #{deployment_name}"
-  end
+  puts upload_data
+  config.stannis.upload_deployment_data(bosh_really_uuid, deployment_name, label, upload_data)
   $stdout.flush
 end

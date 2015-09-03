@@ -18,9 +18,9 @@ class Stannis::Client::DeploymentData
 
   def to_json(options = {})
     {
-      "indicator" => indicator,
-      "value" => value,
-      "label" => label
+      "indicator" => indicator.to_s,
+      "value" => value.to_s,
+      "label" => label.to_s
     }.to_json
   end
 

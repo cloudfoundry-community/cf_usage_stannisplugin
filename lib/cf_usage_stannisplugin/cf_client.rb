@@ -1,13 +1,13 @@
 require "cfoundry"
 
 class Stannis::Plugin::CfUsage::CfClient
-  def initialize(config)
-    @config = config
-    @cf = CFoundry::V2::Client.new(config["api"])
+  def initialize(cf_config)
+    @cf_config = cf_config
+    @cf = CFoundry::V2::Client.new(@cf_config["api"])
   end
 
   def login
-    @cf.login({username: @config["username"], password: @config["password"]})
+    @cf.login({username: @cf_config["username"], password: @cf_config["password"]})
   end
 
   def get(*args)
