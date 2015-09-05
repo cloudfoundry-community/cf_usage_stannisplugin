@@ -11,3 +11,14 @@ deployments:
     skip_ssl_validation: false
     username: admin
     password: admin
+- bosh_really_uuid: 10.10.10.11-uuid-aws-bosh-production
+  deployment_name: cf-redis
+  cf:
+    api: https://api.10.244.0.34.xip.io
+    skip_ssl_validation: false
+    username: admin
+    password: admin
+  service_broker:
+    url: http://cf-redis.10.244.0.34.xip.io
+    username: broker
+    password: broker
