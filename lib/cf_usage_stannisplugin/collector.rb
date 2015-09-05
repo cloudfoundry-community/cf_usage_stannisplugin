@@ -17,9 +17,19 @@ class Stannis::Plugin::CfUsage::Collector
     cf_client.login
 
     extra_data = []
-    extra_data << fetch_apps_count(cf_client)
-    extra_data << fetch_service_instances_count(cf_client)
+    if service_broker = deployment_config["service_broker"]
+      broker_client = Stannis::Plugin::CfUsage::ServiceBrokerClient.new(service_broker)
+      extra_data = fetch_service_broker_status(cf_client, broker_client)
+    else
+      # assume it is for a CF deployment; fetch total numbers
+      extra_data << fetch_apps_count(cf_client)
+      extra_data << fetch_service_instances_count(cf_client)
+    end
     extra_data
+  end
+
+  def fetch_service_broker_status(cf_client, broker_client)
+    []
   end
 
   def fetch_apps_count(cf_client)
